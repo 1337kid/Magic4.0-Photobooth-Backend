@@ -22,15 +22,18 @@ export async function uploadImage(req, res) {
       throw new Error(error.message);
     }
 
-    const { publicURL, error: urlError } = supabase.storage.from(BUCKET_NAME).getPublicUrl(destFileName);
-    
+    const {
+      data: publicURL,
+      error: urlError,
+    } = supabase.storage.from(BUCKET_NAME).getPublicUrl(destFileName);
+
     if (urlError) {
       throw new Error(urlError.message);
     }
 
     return res.status(200).json({
       message: "File uploaded successfully",
-      imageUrl: publicURL,
+      imageUrl: publicURL?.publicUrl,
     });
   } catch (err) {
     console.error("Upload Error:", err);
